@@ -1,4 +1,6 @@
+
 'use client'
+
 import './hardware.css'
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowUpRight, ChevronRight, Cpu, Laptop, Monitor, MousePointer2, Network, Router, Search, Server, ShieldCheck, Smartphone, X } from 'lucide-react'
@@ -17,15 +19,58 @@ type BrandInfo = {
   category: string
   description: string
   applications: string[]
+  image: string
 }
 
 const categories: Category[] = [
-  { id: 'desktop', number: '01', title: 'Equipos de escritorio', description: 'Equipos profesionales para oficinas, estaciones administrativas, productividad y trabajo especializado.', icon: Monitor, brands: ['Dell', 'HP', 'Lenovo', 'ASUS', 'Acer', 'Apple'] },
-  { id: 'laptop', number: '02', title: 'Laptop / Portátiles', description: 'Computadores portátiles para trabajo, movilidad, productividad y diferentes perfiles profesionales.', icon: Laptop, brands: ['Dell', 'HP', 'Lenovo', 'ASUS', 'Acer', 'Apple'] },
-  { id: 'servers', number: '03', title: 'Servidores', description: 'Infraestructura de cómputo para almacenamiento, virtualización, aplicaciones y servicios empresariales.', icon: Server, brands: ['Dell', 'Lenovo', 'HPE'] },
-  { id: 'infrastructure', number: '04', title: 'Infraestructura', description: 'Equipamiento para redes, conectividad, seguridad, administración de infraestructura y comunicaciones.', icon: Network, brands: ['HPE Aruba', 'Fortinet', 'Ubiquiti', 'TP-Link', 'Cisco', 'Hikvision'] },
-  { id: 'other', number: '05', title: 'Otros dispositivos', description: 'Tecnología complementaria para comunicación, movilidad, conectividad y diferentes necesidades empresariales.', icon: Smartphone, brands: ['Xiaomi', 'Motorola', 'Apple'] },
-  { id: 'peripherals', number: '06', title: 'Periféricos', description: 'Accesorios y dispositivos complementarios para mejorar estaciones de trabajo, conectividad y productividad.', icon: MousePointer2, brands: ['Logitech', 'Kingston', 'TP-Link'] },
+  {
+    id: 'desktop',
+    number: '01',
+    title: 'Equipos de escritorio',
+    description: 'Equipos profesionales para oficinas, estaciones administrativas, productividad y trabajo especializado.',
+    icon: Monitor,
+    brands: ['Dell', 'HP', 'Lenovo', 'ASUS', 'Acer', 'Apple'],
+  },
+  {
+    id: 'laptop',
+    number: '02',
+    title: 'Laptop / Portátiles',
+    description: 'Computadores portátiles para trabajo, movilidad, productividad y diferentes perfiles profesionales.',
+    icon: Laptop,
+    brands: ['Dell', 'HP', 'Lenovo', 'ASUS', 'Acer', 'Apple'],
+  },
+  {
+    id: 'servers',
+    number: '03',
+    title: 'Servidores',
+    description: 'Infraestructura de cómputo para almacenamiento, virtualización, aplicaciones y servicios empresariales.',
+    icon: Server,
+    brands: ['Dell', 'Lenovo', 'HPE'],
+  },
+  {
+    id: 'infrastructure',
+    number: '04',
+    title: 'Infraestructura',
+    description: 'Equipamiento para redes, conectividad, seguridad, administración de infraestructura y comunicaciones.',
+    icon: Network,
+    brands: ['HPE Aruba', 'Fortinet', 'TP-Link', 'Cisco'],
+  },
+  {
+    id: 'other',
+    number: '05',
+    title: 'Otros dispositivos',
+    description: 'Tecnología complementaria para comunicación, impresión, videovigilancia, movilidad y diferentes necesidades empresariales.',
+    icon: Smartphone,
+    brands: ['Impresoras', 'Hikvision', 'Xiaomi', 'Motorola', 'Apple'],
+  },
+  {
+    id: 'peripherals',
+    number: '06',
+    title: 'Periféricos',
+    description: 'Accesorios y dispositivos complementarios para mejorar estaciones de trabajo, conectividad y productividad.',
+    icon: MousePointer2,
+    brands: ['Logitech', 'Kingston', 'Genius', 'TP-Link'],
+  },
 ]
 
 const brandDescriptions: Record<string, string> = {
@@ -38,31 +83,127 @@ const brandDescriptions: Record<string, string> = {
   HPE: 'Infraestructura empresarial para servidores, almacenamiento, centros de datos y administración de recursos tecnológicos.',
   'HPE Aruba': 'Soluciones de conectividad empresarial para redes inalámbricas, switching, administración y comunicaciones.',
   Fortinet: 'Tecnologías de seguridad de red orientadas a protección de infraestructura, conectividad empresarial y administración del tráfico.',
-  Ubiquiti: 'Equipamiento de redes y conectividad para organizaciones, oficinas y diferentes tipos de despliegues tecnológicos.',
   'TP-Link': 'Soluciones de conectividad para redes, switching, Wi-Fi y comunicaciones en oficinas y diferentes entornos.',
   Cisco: 'Tecnología de redes y comunicaciones utilizada en infraestructuras empresariales, conectividad y administración de redes.',
-  Hikvision: 'Soluciones de videovigilancia y seguridad física para monitoreo, control y protección de diferentes espacios.',
+  Hikvision: 'Soluciones profesionales de videovigilancia, cámaras IP, NVR y DVR para monitoreo, control y protección de diferentes espacios.',
   Xiaomi: 'Dispositivos tecnológicos orientados a movilidad, comunicación, conectividad y uso complementario.',
   Motorola: 'Dispositivos móviles destinados a comunicación, movilidad y diferentes necesidades de conectividad.',
   Logitech: 'Periféricos para productividad, comunicación y colaboración, incluyendo teclados, mouse, cámaras y accesorios.',
   Kingston: 'Soluciones de memoria y almacenamiento para computadores, estaciones de trabajo y diferentes dispositivos tecnológicos.',
+  Impresoras: 'Soluciones de impresión para oficinas, empresas y diferentes entornos profesionales.',
+  Genius: 'Periféricos y accesorios tecnológicos para productividad, comunicación y uso diario, incluyendo teclados, mouse, cámaras y dispositivos complementarios.',
+}
+
+const brandImages: Record<string, string> = {
+  Dell: '/dell-logo.png',
+  HP: '/hp.png',
+  Lenovo: '/lenovo-logo.png',
+  ASUS: '/asus-logo.png',
+  Acer: '/acer.png',
+  Apple: '/apple-logo.png',
+  HPE: '/hpe.png',
+  'HPE Aruba': '/hpe.png',
+  Fortinet: '/fortinet.png',
+  'TP-Link': '/tp-link.png',
+  Cisco: '/cisco.png',
+  Hikvision: '/hikvision.png',
+  Xiaomi: '/xiaomi.png',
+  Motorola: '/motorola.png',
+  Logitech: '/logitech-logo.png',
+  Kingston: '/kingston-logo.png',
+  Genius: '/genius-logo.png',
+  Impresoras: '/epson.png',
 }
 
 const categoryApplications: Record<string, string[]> = {
-  desktop: ['Estaciones administrativas', 'Oficinas corporativas', 'Trabajo profesional', 'Puestos de productividad'],
-  laptop: ['Trabajo remoto', 'Movilidad empresarial', 'Trabajo profesional', 'Reuniones y desplazamientos'],
-  servers: ['Aplicaciones empresariales', 'Almacenamiento', 'Virtualización', 'Infraestructura de TI'],
-  infrastructure: ['Redes empresariales', 'Conectividad Wi-Fi', 'Seguridad de red', 'Videovigilancia'],
-  other: ['Comunicación', 'Movilidad', 'Conectividad', 'Tecnología complementaria'],
-  peripherals: ['Estaciones de trabajo', 'Videoconferencias', 'Almacenamiento', 'Accesorios tecnológicos'],
+  desktop: [
+    'Estaciones administrativas',
+    'Oficinas corporativas',
+    'Trabajo profesional',
+    'Puestos de productividad',
+  ],
+  laptop: [
+    'Trabajo remoto',
+    'Movilidad empresarial',
+    'Trabajo profesional',
+    'Reuniones y desplazamientos',
+  ],
+  servers: [
+    'Aplicaciones empresariales',
+    'Almacenamiento',
+    'Virtualización',
+    'Infraestructura de TI',
+  ],
+  infrastructure: [
+    'Redes empresariales',
+    'Conectividad Wi-Fi',
+    'Seguridad de red',
+    'Administración de infraestructura',
+  ],
+  other: [
+    'Comunicación',
+    'Impresión empresarial',
+    'Videovigilancia',
+    'Tecnología complementaria',
+  ],
+  peripherals: [
+    'Estaciones de trabajo',
+    'Videoconferencias',
+    'Almacenamiento',
+    'Accesorios tecnológicos',
+  ],
+}
+
+const productApplications: Record<string, string[]> = {
+  Impresoras: [
+    'Impresión empresarial',
+    'Gestión documental',
+    'Oficinas',
+    'Productividad',
+  ],
+  Cámaras: [
+    'Videovigilancia',
+    'Monitoreo',
+    'Seguridad empresarial',
+    'Control de espacios',
+  ],
+  NVR: [
+    'Grabación IP',
+    'Videovigilancia',
+    'Monitoreo centralizado',
+    'Almacenamiento de video',
+  ],
+  DVR: [
+    'Grabación CCTV',
+    'Videovigilancia',
+    'Monitoreo',
+    'Seguridad empresarial',
+  ],
+  Hikvision: [
+    'Videovigilancia',
+    'Cámaras IP',
+    'NVR y DVR',
+    'Seguridad empresarial',
+  ],
 }
 
 function getBrandInfo(brand: string, category: Category): BrandInfo {
   return {
     name: brand,
     category: category.title,
-    description: brandDescriptions[brand] || 'Soluciones tecnológicas para complementar diferentes entornos profesionales y empresariales.',
-    applications: categoryApplications[category.id] || ['Entornos profesionales', 'Productividad', 'Infraestructura tecnológica'],
+    description:
+      brandDescriptions[brand] ||
+      'Soluciones tecnológicas para complementar diferentes entornos profesionales y empresariales.',
+    applications:
+      productApplications[brand] ||
+      categoryApplications[category.id] || [
+        'Entornos profesionales',
+        'Productividad',
+        'Infraestructura tecnológica',
+      ],
+    image:
+      brandImages[brand] ||
+      '/hardware/products/default.png',
   }
 }
 
@@ -75,38 +216,84 @@ function HardwareVisual() {
 
       <div className="hardware-device hardware-monitor">
         <div className="device-screen">
-          <div className="screen-top"><span /><span /><span /></div>
+          <div className="screen-top">
+            <span />
+            <span />
+            <span />
+          </div>
+
           <div className="screen-content">
             <div className="screen-line large" />
             <div className="screen-line" />
             <div className="screen-line short" />
-            <div className="screen-cards"><div /><div /><div /></div>
+
+            <div className="screen-cards">
+              <div />
+              <div />
+              <div />
+            </div>
           </div>
         </div>
+
         <div className="monitor-stand" />
       </div>
 
       <div className="hardware-device hardware-laptop">
         <div className="laptop-screen">
-          <div className="laptop-interface"><div /><div /><div /></div>
+          <div className="laptop-interface">
+            <div />
+            <div />
+            <div />
+          </div>
         </div>
+
         <div className="laptop-base" />
       </div>
 
       <div className="hardware-device hardware-server">
-        <div className="server-top"><span>SERVER</span><i /></div>
-        <div className="server-slot"><span /><span /><span /></div>
-        <div className="server-slot"><span /><span /><span /></div>
-        <div className="server-slot"><span /><span /><span /></div>
+        <div className="server-top">
+          <span>SERVER</span>
+          <i />
+        </div>
+
+        <div className="server-slot">
+          <span />
+          <span />
+          <span />
+        </div>
+
+        <div className="server-slot">
+          <span />
+          <span />
+          <span />
+        </div>
+
+        <div className="server-slot">
+          <span />
+          <span />
+          <span />
+        </div>
       </div>
 
       <div className="hardware-device hardware-network">
         <Router size={24} strokeWidth={1.5} />
-        <div className="network-waves"><span /><span /><span /></div>
+
+        <div className="network-waves">
+          <span />
+          <span />
+          <span />
+        </div>
       </div>
 
-      <div className="hardware-floating hardware-floating-one"><Cpu size={17} /><span>COMPUTE</span></div>
-      <div className="hardware-floating hardware-floating-two"><ShieldCheck size={17} /><span>SECURITY</span></div>
+      <div className="hardware-floating hardware-floating-one">
+        <Cpu size={17} />
+        <span>COMPUTE</span>
+      </div>
+
+      <div className="hardware-floating hardware-floating-two">
+        <ShieldCheck size={17} />
+        <span>SECURITY</span>
+      </div>
     </div>
   )
 }
@@ -117,22 +304,33 @@ export default function HardwarePage() {
   const [catalogOpen, setCatalogOpen] = useState(false)
   const [search, setSearch] = useState('')
 
-  const activeCategory = categories.find((category) => category.id === selectedCategory) ?? categories[0]
+  const activeCategory =
+    categories.find((category) => category.id === selectedCategory) ??
+    categories[0]
 
   const filteredCategories = useMemo(() => {
     const value = search.trim().toLowerCase()
+
     if (!value) return categories
-    return categories.filter((category) =>
-      category.title.toLowerCase().includes(value) ||
-      category.description.toLowerCase().includes(value) ||
-      category.brands.some((brand) => brand.toLowerCase().includes(value))
+
+    return categories.filter(
+      (category) =>
+        category.title.toLowerCase().includes(value) ||
+        category.description.toLowerCase().includes(value) ||
+        category.brands.some((brand) =>
+          brand.toLowerCase().includes(value),
+        ),
     )
   }, [search])
 
   const visibleBrands = useMemo(() => {
     const value = search.trim().toLowerCase()
+
     if (!value) return activeCategory.brands
-    return activeCategory.brands.filter((brand) => brand.toLowerCase().includes(value))
+
+    return activeCategory.brands.filter((brand) =>
+      brand.toLowerCase().includes(value),
+    )
   }, [activeCategory, search])
 
   const selectCategory = (id: string) => {
@@ -145,6 +343,7 @@ export default function HardwarePage() {
   const closeCatalog = () => {
     setCatalogOpen(false)
     setSelectedBrand(null)
+    setSearch('')
   }
 
   useEffect(() => {
@@ -154,16 +353,24 @@ export default function HardwarePage() {
           setSelectedBrand(null)
           return
         }
-        if (catalogOpen) closeCatalog()
+
+        if (catalogOpen) {
+          closeCatalog()
+        }
       }
     }
 
     document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
   }, [catalogOpen, selectedBrand])
 
   useEffect(() => {
-    document.body.style.overflow = catalogOpen || selectedBrand ? 'hidden' : ''
+    document.body.style.overflow =
+      catalogOpen || selectedBrand ? 'hidden' : ''
+
     return () => {
       document.body.style.overflow = ''
     }
@@ -174,7 +381,10 @@ export default function HardwarePage() {
       <section className="hardware-hero">
         <div className="hardware-hero-inner">
           <div className="hardware-hero-copy">
-            <div className="hardware-eyebrow"><span className="eyebrow-line" />HARDWARE · CSH TECH SOLUTION</div>
+            <div className="hardware-eyebrow">
+              <span className="eyebrow-line" />
+              HARDWARE · CSH TECH SOLUTION
+            </div>
 
             <h1>
               Tecnología física
@@ -182,18 +392,32 @@ export default function HardwarePage() {
               para cada <em>entorno.</em>
             </h1>
 
-            <p>Equipos de escritorio, portátiles, servidores, infraestructura y dispositivos tecnológicos de marcas reconocidas.</p>
+            <p>
+              Equipos de escritorio, portátiles, servidores,
+              infraestructura y dispositivos tecnológicos de marcas
+              reconocidas.
+            </p>
 
             <div className="hardware-hero-actions">
               <button
                 type="button"
-                onClick={() => document.getElementById('hardware-categories')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                onClick={() =>
+                  document
+                    .getElementById('hardware-categories')
+                    ?.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'start',
+                    })
+                }
               >
                 Explorar hardware
                 <ArrowUpRight size={17} />
               </button>
 
-              <span><i />Soluciones tecnológicas</span>
+              <span>
+                <i />
+                Soluciones tecnológicas
+              </span>
             </div>
           </div>
 
@@ -201,10 +425,14 @@ export default function HardwarePage() {
         </div>
       </section>
 
-      <section className="hardware-categories-section" id="hardware-categories">
+      <section
+        className="hardware-categories-section"
+        id="hardware-categories"
+      >
         <div className="hardware-section-heading">
           <div>
             <span className="section-label">01 / CATÁLOGO</span>
+
             <h2>
               Encuentra la tecnología
               <br />
@@ -212,7 +440,11 @@ export default function HardwarePage() {
             </h2>
           </div>
 
-          <p>Selecciona una categoría para consultar las marcas disponibles y conocer el tipo de tecnología que puedes encontrar en nuestro portafolio.</p>
+          <p>
+            Selecciona una categoría para consultar las marcas disponibles
+            y conocer el tipo de tecnología que puedes encontrar en
+            nuestro portafolio.
+          </p>
         </div>
 
         <div className="hardware-search-wrapper">
@@ -226,7 +458,11 @@ export default function HardwarePage() {
           />
 
           {search && (
-            <button type="button" onClick={() => setSearch('')} aria-label="Limpiar búsqueda">
+            <button
+              type="button"
+              onClick={() => setSearch('')}
+              aria-label="Limpiar búsqueda"
+            >
               <X size={17} />
             </button>
           )}
@@ -240,21 +476,33 @@ export default function HardwarePage() {
               <button
                 type="button"
                 key={category.id}
-                className={`hardware-category-card ${selectedCategory === category.id && catalogOpen ? 'selected' : ''}`}
+                className={`hardware-category-card ${selectedCategory === category.id && catalogOpen
+                    ? 'selected'
+                    : ''
+                  }`}
                 onClick={() => selectCategory(category.id)}
               >
                 <div className="category-card-top">
                   <span>{category.number}</span>
-                  <div className="category-icon"><Icon size={23} strokeWidth={1.5} /></div>
+
+                  <div className="category-icon">
+                    <Icon size={23} strokeWidth={1.5} />
+                  </div>
                 </div>
 
                 <div className="category-card-content">
                   <h3>{category.title}</h3>
+
                   <p>{category.description}</p>
                 </div>
 
                 <div className="category-card-bottom">
-                  <span>{category.brands.length > 0 ? `${category.brands.length} marcas disponibles` : 'Ver portafolio'}</span>
+                  <span>
+                    {category.brands.length > 0
+                      ? `${category.brands.length} opciones disponibles`
+                      : 'Ver portafolio'}
+                  </span>
+
                   <ChevronRight size={18} />
                 </div>
               </button>
@@ -265,8 +513,12 @@ export default function HardwarePage() {
         {filteredCategories.length === 0 && (
           <div className="hardware-empty">
             <Search size={26} />
+
             <h3>No encontramos resultados</h3>
-            <p>Prueba con otro nombre de categoría o marca.</p>
+
+            <p>
+              Prueba con otro nombre de categoría o marca.
+            </p>
           </div>
         )}
       </section>
@@ -282,34 +534,73 @@ export default function HardwarePage() {
               parte de un <em>ecosistema.</em>
             </h2>
 
-            <p>Desde una estación de trabajo hasta una infraestructura empresarial completa, nuestro portafolio reúne diferentes categorías de tecnología para cubrir distintos escenarios.</p>
+            <p>
+              Desde una estación de trabajo hasta una infraestructura
+              empresarial completa, nuestro portafolio reúne diferentes
+              categorías de tecnología para cubrir distintos escenarios.
+            </p>
           </div>
 
           <div className="overview-map">
-            <div className="overview-node node-center"><Cpu size={23} /><span>CSH</span></div>
+            <div className="overview-node node-center">
+              <Cpu size={23} />
+              <span>CSH</span>
+            </div>
+
             <div className="overview-line line-one" />
             <div className="overview-line line-two" />
             <div className="overview-line line-three" />
             <div className="overview-line line-four" />
-            <div className="overview-node node-one"><Monitor size={19} /><span>Equipos</span></div>
-            <div className="overview-node node-two"><Server size={19} /><span>Servidores</span></div>
-            <div className="overview-node node-three"><Network size={19} /><span>Redes</span></div>
-            <div className="overview-node node-four"><Laptop size={19} /><span>Movilidad</span></div>
+
+            <div className="overview-node node-one">
+              <Monitor size={19} />
+              <span>Equipos</span>
+            </div>
+
+            <div className="overview-node node-two">
+              <Server size={19} />
+              <span>Servidores</span>
+            </div>
+
+            <div className="overview-node node-three">
+              <Network size={19} />
+              <span>Redes</span>
+            </div>
+
+            <div className="overview-node node-four">
+              <Laptop size={19} />
+              <span>Movilidad</span>
+            </div>
           </div>
         </div>
       </section>
 
       {catalogOpen && (
-        <div className="hardware-catalog-backdrop" onClick={closeCatalog}>
-          <div className="hardware-catalog-modal" onClick={(event) => event.stopPropagation()}>
+        <div
+          className="hardware-catalog-backdrop"
+          onClick={closeCatalog}
+        >
+          <div
+            className="hardware-catalog-modal"
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className="hardware-catalog-header">
               <div>
-                <span className="catalog-overline">{activeCategory.number} / CATÁLOGO</span>
+                <span className="catalog-overline">
+                  {activeCategory.number} / CATÁLOGO
+                </span>
+
                 <h2>{activeCategory.title}</h2>
+
                 <p>{activeCategory.description}</p>
               </div>
 
-              <button type="button" className="hardware-catalog-close" onClick={closeCatalog} aria-label="Cerrar catálogo">
+              <button
+                type="button"
+                className="hardware-catalog-close"
+                onClick={closeCatalog}
+                aria-label="Cerrar catálogo"
+              >
                 <X size={20} />
               </button>
             </div>
@@ -317,8 +608,14 @@ export default function HardwarePage() {
             <div className="hardware-catalog-toolbar">
               <div className="catalog-count">
                 <span>PORTAFOLIO</span>
-                <strong>{activeCategory.brands.length.toString().padStart(2, '0')}</strong>
-                <small>marcas</small>
+
+                <strong>
+                  {activeCategory.brands.length
+                    .toString()
+                    .padStart(2, '0')}
+                </strong>
+
+                <small>opciones</small>
               </div>
 
               <div className="catalog-mini-search">
@@ -328,41 +625,70 @@ export default function HardwarePage() {
                   type="text"
                   placeholder="Buscar dentro de esta categoría..."
                   value={search}
-                  onChange={(event) => setSearch(event.target.value)}
+                  onChange={(event) =>
+                    setSearch(event.target.value)
+                  }
                 />
               </div>
             </div>
 
             {visibleBrands.length > 0 ? (
               <div className="hardware-catalog-grid">
-                {visibleBrands.map((brand, index) => (
-                  <button
-                    type="button"
-                    className="hardware-catalog-card"
-                    key={brand}
-                    onClick={() => setSelectedBrand(getBrandInfo(brand, activeCategory))}
-                  >
-                    <div className="catalog-card-number">{String(index + 1).padStart(2, '0')}</div>
-                    <div className="catalog-brand-symbol">{brand.charAt(0)}</div>
+                {visibleBrands.map((brand, index) => {
+                  const product = getBrandInfo(brand, activeCategory)
 
-                    <div className="catalog-card-content">
-                      <span>{activeCategory.title}</span>
-                      <h3>{brand}</h3>
-                      <p>{brandDescriptions[brand] || 'Soluciones tecnológicas para diferentes entornos profesionales.'}</p>
-                    </div>
+                  return (
+                    <button
+                      type="button"
+                      className="hardware-catalog-card"
+                      key={brand}
+                      onClick={() => setSelectedBrand(product)}
+                    >
+                      <div className="catalog-card-number">
+                        {String(index + 1).padStart(2, '0')}
+                      </div>
 
-                    <div className="catalog-card-action">
-                      <span>Ver información</span>
-                      <ArrowUpRight size={17} />
-                    </div>
-                  </button>
-                ))}
+
+                      <div className="catalog-product-image">
+                        <img
+                          className={product.name === 'Apple' ? 'catalog-product-logo apple-logo' : 'catalog-product-logo'}
+                          src={product.image}
+                          alt={product.name}
+                          loading="lazy"
+                        />
+                      </div>
+
+
+
+                      <div className="catalog-card-content">
+                        <span>{activeCategory.title}</span>
+
+                        <h3>{brand}</h3>
+
+                        <p>
+                          {brandDescriptions[brand] ||
+                            'Soluciones tecnológicas para diferentes entornos profesionales.'}
+                        </p>
+                      </div>
+
+                      <div className="catalog-card-action">
+                        <span>Ver información</span>
+                        <ArrowUpRight size={17} />
+                      </div>
+                    </button>
+                  )
+                })}
               </div>
             ) : (
               <div className="catalog-empty">
                 <Search size={28} />
-                <h3>Marca no encontrada</h3>
-                <p>Prueba con otro término para consultar el portafolio disponible.</p>
+
+                <h3>Opción no encontrada</h3>
+
+                <p>
+                  Prueba con otro término para consultar el
+                  portafolio disponible.
+                </p>
               </div>
             )}
           </div>
@@ -370,34 +696,61 @@ export default function HardwarePage() {
       )}
 
       {selectedBrand && (
-        <div className="hardware-brand-detail-backdrop" onClick={() => setSelectedBrand(null)}>
-          <div className="hardware-brand-detail" onClick={(event) => event.stopPropagation()}>
-            <button type="button" className="hardware-modal-close" onClick={() => setSelectedBrand(null)} aria-label="Cerrar">
+        <div
+          className="hardware-brand-detail-backdrop"
+          onClick={() => setSelectedBrand(null)}
+        >
+          <div
+            className="hardware-brand-detail"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="hardware-modal-close"
+              onClick={() => setSelectedBrand(null)}
+              aria-label="Cerrar"
+            >
               <X size={20} />
             </button>
 
             <div className="hardware-detail-top">
-              <div className="hardware-detail-symbol">{selectedBrand.name.charAt(0)}</div>
+              <div className="hardware-detail-image">
+                <img
+                  src={selectedBrand.image}
+                  alt={selectedBrand.name}
+                />
+              </div>
 
               <div>
                 <span>{selectedBrand.category}</span>
+
                 <h2>{selectedBrand.name}</h2>
               </div>
             </div>
 
             <div className="hardware-detail-content">
               <div className="hardware-detail-description">
-                <span className="section-label">INFORMACIÓN</span>
+                <span className="section-label">
+                  INFORMACIÓN
+                </span>
+
                 <p>{selectedBrand.description}</p>
               </div>
 
               <div className="hardware-detail-applications">
-                <span className="section-label">APLICACIONES</span>
+                <span className="section-label">
+                  APLICACIONES
+                </span>
 
                 <div className="hardware-detail-list">
-                  {selectedBrand.applications.map((application) => (
-                    <div key={application}><span />{application}</div>
-                  ))}
+                  {selectedBrand.applications.map(
+                    (application) => (
+                      <div key={application}>
+                        <span />
+                        {application}
+                      </div>
+                    ),
+                  )}
                 </div>
               </div>
             </div>
@@ -405,7 +758,10 @@ export default function HardwarePage() {
             <div className="hardware-detail-footer">
               <span>CSH Tech Solution · Hardware</span>
 
-              <button type="button" onClick={() => setSelectedBrand(null)}>
+              <button
+                type="button"
+                onClick={() => setSelectedBrand(null)}
+              >
                 Volver al catálogo
                 <ChevronRight size={16} />
               </button>
