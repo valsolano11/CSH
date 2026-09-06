@@ -110,7 +110,7 @@ const brandImages: Record<string, string> = {
   Xiaomi: '/xiaomi.png',
   Motorola: '/motorola.png',
   Logitech: '/logitech-logo.png',
-  Kingston: '/kingston-logo.png',
+  Kingston: '/Kingston-logo.png',
   Genius: '/genius-logo.png',
   Impresoras: '/epson.png',
 }
