@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowUpRight, Check, ChevronRight, Cloud, FileKey, Laptop, Search, ShieldCheck, X, Zap } from 'lucide-react'
+import { ArrowUpRight, Check, ChevronRight, Cloud, FileKey, Laptop, Search, ShieldCheck, X } from 'lucide-react'
 
 const WHATSAPP_BASE = 'https://wa.me/573025305818?text=Hola%20CSH%20Tech%20Solution,%20quiero%20informacion%20sobre%20sus%20soluciones%20de%20software.'
 
@@ -12,7 +12,7 @@ type SoftwareProduct = {
   category: string
   description: string
   longDescription: string
-  icon: 'microsoft' | 'kaspersky' | 'sophos' | 'fortinet' | 'windows'
+  image: string
   modalities: string[]
   features: string[]
   idealFor: string
@@ -26,7 +26,7 @@ const products: SoftwareProduct[] = [
     category: 'Productividad',
     description: 'Licenciamiento Microsoft para empresas, profesionales y diferentes necesidades tecnológicas.',
     longDescription: 'Encuentra alternativas de licenciamiento Microsoft de acuerdo con el tipo de uso, equipo y necesidades de tu empresa. Contamos con diferentes modalidades para que puedas elegir la opción que mejor se adapte a tu operación.',
-    icon: 'microsoft',
+    image: '/microsoft.png',
     modalities: ['CSP NCE · Suscripción anual', 'ESD · Licencia digital', 'Vitalicia / Perpetua'],
     features: ['Licenciamiento oficial', 'Diferentes modalidades de adquisición', 'Opciones para empresas y profesionales', 'Asesoría para elegir la licencia adecuada'],
     idealFor: 'Empresas, profesionales y usuarios que necesitan soluciones Microsoft con una modalidad de licenciamiento acorde a su operación.',
@@ -38,7 +38,7 @@ const products: SoftwareProduct[] = [
     category: 'Ciberseguridad',
     description: 'Soluciones de ciberseguridad para proteger equipos y entornos empresariales.',
     longDescription: 'Protege la información y los equipos de tu organización mediante soluciones de seguridad Kaspersky. Consulta con nuestro equipo las opciones disponibles y encuentra la alternativa de licenciamiento que mejor se ajuste a tus necesidades.',
-    icon: 'kaspersky',
+    image: '/kaspersky-logo.png',
     modalities: ['CSP NCE'],
     features: ['Protección de equipos', 'Enfoque empresarial', 'Licenciamiento mediante CSP NCE', 'Asesoría especializada'],
     idealFor: 'Empresas que buscan fortalecer la seguridad de sus equipos y contar con una solución de protección adecuada para su operación.',
@@ -50,7 +50,7 @@ const products: SoftwareProduct[] = [
     category: 'Ciberseguridad',
     description: 'Soluciones de ciberseguridad orientadas a la protección de organizaciones.',
     longDescription: 'Sophos ofrece soluciones enfocadas en seguridad empresarial. En CSH Tech Solution puedes consultar las opciones disponibles mediante CSP NCE y recibir orientación para seleccionar la solución adecuada para tu organización.',
-    icon: 'sophos',
+    image: '/sophos.png',
     modalities: ['CSP NCE'],
     features: ['Seguridad empresarial', 'Protección tecnológica', 'Licenciamiento CSP NCE', 'Acompañamiento especializado'],
     idealFor: 'Organizaciones que requieren soluciones de seguridad para proteger sus equipos e infraestructura tecnológica.',
@@ -62,7 +62,7 @@ const products: SoftwareProduct[] = [
     category: 'Redes y seguridad',
     description: 'Soluciones Fortinet para seguridad, conectividad e infraestructura empresarial.',
     longDescription: 'Fortinet ofrece tecnologías orientadas a la seguridad de redes y la infraestructura empresarial. Consulta con nuestro equipo las opciones de licenciamiento CSP NCE disponibles para tu organización.',
-    icon: 'fortinet',
+    image: '/fortinet.png',
     modalities: ['CSP NCE'],
     features: ['Seguridad de redes', 'Protección de infraestructura', 'Soluciones empresariales', 'Licenciamiento CSP NCE'],
     idealFor: 'Empresas que necesitan fortalecer la seguridad de su infraestructura y sus redes.',
@@ -74,32 +74,26 @@ const products: SoftwareProduct[] = [
     category: 'Sistemas operativos',
     description: 'Sistemas operativos Windows con diferentes alternativas de licenciamiento.',
     longDescription: 'Adquiere soluciones Windows de acuerdo con las características de tus equipos y la forma en que tu empresa administra sus licencias. Contamos con alternativas de licenciamiento perpetuo y CSP NCE.',
-    icon: 'windows',
+    image: '/microsoft.png',
     modalities: ['Perpetuo', 'CSP NCE', 'OEM- LICENCIA PARA EQUIPO'],
     features: ['Sistema operativo Windows', 'Alternativas de licenciamiento', 'Opciones para equipos profesionales', 'Orientación para seleccionar la modalidad'],
     idealFor: 'Personas, profesionales y empresas que necesitan adquirir o regularizar licencias de Windows.',
   },
+  {
+    id: 'veeam',
+    brand: 'Veeam',
+    title: 'Soluciones Veeam',
+    category: 'Respaldo y recuperación',
+    description: 'Soluciones Veeam para respaldo, recuperación y protección de datos empresariales.',
+    longDescription: 'Veeam ofrece soluciones orientadas a la protección, respaldo y recuperación de datos para organizaciones. Consulta con nuestro equipo las alternativas disponibles y encuentra la solución adecuada para la infraestructura y necesidades de tu empresa.',
+    image: '/veeam_logo.png',
+    modalities: ['Licenciamiento empresarial'],
+    features: ['Backup y recuperación', 'Protección de datos', 'Continuidad operativa', 'Soluciones para infraestructura empresarial'],
+    idealFor: 'Empresas que necesitan proteger sus datos, respaldar su información y contar con opciones de recuperación ante incidentes.',
+  },
 ]
 
-const categories = ['Todos', 'Productividad', 'Ciberseguridad', 'Redes y seguridad', 'Sistemas operativos']
-
-function ProductIcon({ type, large = false }: { type: SoftwareProduct['icon']; large?: boolean }) {
-  const size = large ? 34 : 22
-
-  if (type === 'microsoft') {
-    return <span className={`product-letter ${large ? 'product-letter-large' : ''}`}>M</span>
-  }
-
-  if (type === 'windows') {
-    return <span className={`product-letter ${large ? 'product-letter-large' : ''}`}>W</span>
-  }
-
-  if (type === 'kaspersky' || type === 'sophos') {
-    return <ShieldCheck size={size} strokeWidth={1.8} />
-  }
-
-  return <Zap size={size} strokeWidth={1.8} />
-}
+const categories = ['Todos', 'Productividad', 'Ciberseguridad', 'Redes y seguridad', 'Sistemas operativos', 'Respaldo y recuperación']
 
 export default function SoftwarePage() {
   const [selectedProduct, setSelectedProduct] = useState<SoftwareProduct | null>(null)
@@ -112,11 +106,17 @@ export default function SoftwarePage() {
     return products.filter((product) => {
       const matchesCategory = category === 'Todos' || product.category === category
 
-      if (!normalizedSearch) {
-        return matchesCategory
-      }
+      if (!normalizedSearch) return matchesCategory
 
-      const searchableText = [product.brand, product.title, product.category, product.description, product.longDescription, ...product.modalities, ...product.features].join(' ').toLowerCase()
+      const searchableText = [
+        product.brand,
+        product.title,
+        product.category,
+        product.description,
+        product.longDescription,
+        ...product.modalities,
+        ...product.features,
+      ].join(' ').toLowerCase()
 
       return matchesCategory && searchableText.includes(normalizedSearch)
     })
@@ -131,9 +131,7 @@ export default function SoftwarePage() {
     document.body.style.overflow = 'hidden'
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setSelectedProduct(null)
-      }
+      if (event.key === 'Escape') setSelectedProduct(null)
     }
 
     window.addEventListener('keydown', handleKeyDown)
@@ -144,18 +142,8 @@ export default function SoftwarePage() {
     }
   }, [selectedProduct])
 
-  const openProduct = (product: SoftwareProduct) => {
-    setSelectedProduct(product)
-  }
-
-  const closeProduct = () => {
-    setSelectedProduct(null)
-  }
-
   const createWhatsAppUrl = () => {
-    if (!selectedProduct) {
-      return WHATSAPP_BASE
-    }
+    if (!selectedProduct) return WHATSAPP_BASE
 
     const message = `Hola CSH Tech Solution, quiero información sobre ${selectedProduct.title}.`
 
@@ -291,11 +279,14 @@ export default function SoftwarePage() {
         <div className="products-layout">
           <div className="product-results">
             {filteredProducts.map((product, index) => (
-              <article key={product.id} className="product-card" onClick={() => openProduct(product)}>
+              <article key={product.id} className="product-card" onClick={() => setSelectedProduct(product)}>
                 <div className="product-card-number">{String(index + 1).padStart(2, '0')}</div>
 
                 <div className="product-card-top">
-                  <div className="product-brand-mark"><ProductIcon type={product.icon} /></div>
+                  <div className="product-brand-mark">
+                    <img src={product.image} alt={`${product.brand} logo`} />
+                  </div>
+
                   <span className="product-category">{product.category}</span>
                 </div>
 
@@ -352,12 +343,14 @@ export default function SoftwarePage() {
       </section>
 
       {selectedProduct && (
-        <div className="software-modal-overlay" onClick={closeProduct} role="presentation">
+        <div className="software-modal-overlay" onClick={() => setSelectedProduct(null)} role="presentation">
           <div className="software-modal" role="dialog" aria-modal="true" aria-labelledby="software-modal-title" onClick={(event) => event.stopPropagation()}>
-            <button type="button" className="software-modal-close" onClick={closeProduct} aria-label="Cerrar información"><X size={20} /></button>
+            <button type="button" className="software-modal-close" onClick={() => setSelectedProduct(null)} aria-label="Cerrar información"><X size={20} /></button>
 
             <div className="software-modal-header">
-              <div className="software-modal-brand"><ProductIcon type={selectedProduct.icon} large /></div>
+              <div className="software-modal-brand">
+                <img src={selectedProduct.image} alt={`${selectedProduct.brand} logo`} />
+              </div>
 
               <div className="software-modal-heading">
                 <span>{selectedProduct.brand}</span>
