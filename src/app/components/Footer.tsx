@@ -95,7 +95,7 @@ export default function Footer() {
         <div className="footer-bottom">
           <div className="footer-copyright">
             <Copyright size={13} />
-            <span>© 2026 CSH Tech Solution v1.1.2</span>
+            <span>© 2026 CSH Tech Solution v1.1.3</span>
           </div>
           <span className="footer-slogan">
             Tecnología que impulsa tu negocio.
