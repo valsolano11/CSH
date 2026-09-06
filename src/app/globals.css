@@ -1450,7 +1450,7 @@ img {
   background: #f6f8fb;
   color: #0b1c2d;
   font-family: var(--font-geist), Arial, sans-serif;
-  font-size: 1rem;
+  font-size: 1.05rem;
   line-height: 1.5;
 }
 
@@ -1582,6 +1582,7 @@ img {
   position: relative;
   z-index: 2;
   padding: 60px 0;
+  transform: translateY(-45px);
 }
 
 .software-kicker,
